@@ -1,0 +1,4 @@
+*.idea
+*.DS_Store
+Codes/__pycache__/
+Codes/Main.py
