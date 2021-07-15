@@ -19,7 +19,7 @@ def fixpt(g, p0, tol, max1):
         try:
             relerr = abs(P[-1] - P[-2]) / abs(P[-1])
         except ZeroDivisionError:
-            pass
+            relerr = tol + 1
         if err < tol or relerr < tol:
             break
     if k + 1 == max1:
@@ -84,6 +84,12 @@ def regula(f, a, b, epsilon, max1):
 
 
 def approot(f, X, epsilon):
+    """
+    :param f: the function
+    :param X: the vector of abscissas
+    :param epsilon: the tolerance
+    :return: the vector of approximate root(s)
+    """
     Y = list(map(f, X))
     yrange = max(Y) - min(Y)
     epsilon2 = yrange * epsilon
@@ -100,14 +106,47 @@ def approot(f, X, epsilon):
 
 
 def newton(f, df, p0, delta, epsilon, max1):
+    """
+    :param f: the function
+    :param df: the derivative of f
+    :param p0: the initial approximate root
+    :param delta: the tolerance for p0
+    :param epsilon: the tolerance for f(p0)
+    :param max1: the maximum number of the iterations
+    :return: (the number of iterations, the approximation to the solution x0, the absolute error, the value f(x0))
+    """
     for k in range(max1):
         p1 = p0 - f(p0) / df(p0)
         err = abs(p0 - p1)
         try:
             relerr = err / abs(p1)
         except ZeroDivisionError:
-            pass
+            relerr = delta + 1
         p0 = p1
         if err < delta or relerr < delta or abs(f(p0)) < epsilon:
             break
     return k + 1, p0, err, f(p0)
+
+
+def secant(f, p0, p1, delta, epsilon, max1):
+    """
+    :param f: the function
+    :param p0: the initial approximate root
+    :param p1: the initial approximate root
+    :param delta: the tolerance for p0
+    :param epsilon: the tolerance for f(p0)
+    :param max1: the maximum number of the iterations
+    :return: (the number of iterations, the approximation to the solution x0, the absolute error, the value f(x0))
+    """
+    for k in range(max1):
+        p2 = p1 - (f(p1) * (p0 - p1)) / (f(p0) - f(p1))
+        err = abs(p2 - p1)
+        try:
+            relerr = err / abs(p2)
+        except ZeroDivisionError:
+            relerr = delta + 1
+        p0 = p1
+        p1 = p2
+        if err < delta or relerr < delta or abs(f(p1)) < epsilon:
+            break
+    return k + 1, p1, err, f(p1)
