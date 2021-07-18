@@ -1,8 +1,6 @@
-import math
-
-
 def fixpt(g, p0, tol, max1):
     """
+    To solve fixed point problem
     :param g: the iteration function
     :param p0: the initial point
     :param tol: the tolerance of the error
@@ -29,6 +27,7 @@ def fixpt(g, p0, tol, max1):
 
 def bisect(f, a, b, delta):
     """
+    To find one root of an equation
     :param f: the function
     :param a: the left point
     :param b: the right point
@@ -38,8 +37,10 @@ def bisect(f, a, b, delta):
     if f(a)*f(b) > 0:
         print("Note: f(a)*f(b) > 0")
         return
-    max1 = round((math.log(b - a) - math.log(delta)) / math.log(2))
-    for k in range(max1):
+    # max1 = round((math.log(b - a) - math.log(delta)) / math.log(2))
+    k = 0
+    while True:
+        k += 1
         c = (a + b) / 2
         if f(c) == 0:
             a = c
@@ -52,11 +53,12 @@ def bisect(f, a, b, delta):
             break
     c = (a + b) / 2
     err = abs(b - a)
-    return k + 1, c, err, f(c)
+    return k, c, err, f(c)
 
 
 def regula(f, a, b, epsilon, max1):
     """
+    To find one root of an equation
     :param f: the function
     :param a: the left point
     :param b: the right point
@@ -85,6 +87,7 @@ def regula(f, a, b, epsilon, max1):
 
 def approot(f, X, epsilon):
     """
+    To get the approximate roots of an equation
     :param f: the function
     :param X: the vector of abscissas
     :param epsilon: the tolerance
@@ -107,6 +110,7 @@ def approot(f, X, epsilon):
 
 def newton(f, df, p0, delta, epsilon, max1):
     """
+    To find one root of an equation
     :param f: the function
     :param df: the derivative of f
     :param p0: the initial approximate root
@@ -130,6 +134,7 @@ def newton(f, df, p0, delta, epsilon, max1):
 
 def secant(f, p0, p1, delta, epsilon, max1):
     """
+    To find one root of an equation
     :param f: the function
     :param p0: the initial approximate root
     :param p1: the initial approximate root
