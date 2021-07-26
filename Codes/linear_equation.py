@@ -108,3 +108,73 @@ def lufact(A, b):
         x.append([(y[k][0] - ux) / A[k][k]])
     x.reverse()
     return x
+
+
+def jacobi(A, b, P, delta, max1):
+    """
+    To solve linear equation like Ax = b
+    :param A: an N*N matrix
+    :param b: an N*1 matrix
+    :param P: an N*1 matrix
+    :param delta: the tolerance
+    :param max1: the maximum number of the iterations
+    :return: (the number of iterations, the approximation to the solution, the absolute error, the relative error)
+    """
+    n = len(b)
+    for k in range(max1):
+        X = []
+        err = 0
+        norm_X = 0
+        for j in range(n):
+            ap = 0
+            for i in range(n):
+                if i != j:
+                    ap += A[j][i] * P[i][0]
+            x = (b[j][0] - ap) / A[j][j]
+            norm_X += x
+            err += abs(x - P[j][0])
+            X.append([x])
+        try:
+            relerr = err / (norm_X)
+        except ZeroDivisionError:
+            relerr = delta + 1
+        P = X
+        if err < delta or relerr < delta:
+            break
+    return k + 1, X, err, relerr
+
+
+def gseid(A, b, P, delta, max1):
+    """
+    To solve linear equation like Ax = b
+    :param A: an N*N matrix
+    :param b: an N*1 matrix
+    :param P: an N*1 matrix
+    :param delta: the tolerance
+    :param max1: the maximum number of the iterations
+    :return: (the number of iterations, the approximation to the solution, the absolute error, the relative error)
+    """
+    n = len(b)
+    for k in range(max1):
+        X = []
+        err = 0
+        norm_X = 0
+        P0 = P
+        for j in range(n):
+            ap = 0
+            for i in range(n):
+                if i != j:
+                    ap += A[j][i] * P0[i][0]
+            x = (b[j][0] - ap) / A[j][j]
+            norm_X += x
+            err += abs(x - P[j][0])
+            X.append([x])
+            P0[j][0] = x
+        try:
+            relerr = err / (norm_X)
+        except ZeroDivisionError:
+            relerr = delta + 1
+        P = X
+        if err < delta or relerr < delta:
+            break
+    return k + 1, X, err, relerr
